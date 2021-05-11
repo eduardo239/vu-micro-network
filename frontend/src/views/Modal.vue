@@ -11,10 +11,15 @@
           <img alt="user avatar" :src="post.image" />
         </template>
         <template #title>
-          <div class="flex-v-center">
-            <Avatar :image="post.image" shape="circle" />
-            {{ post.userId.name }}
-          </div>
+          <router-link :to="'/profile/' + post.userId._id">
+            <div class="flex-v-center">
+              <Chip
+                :label="post.userId.name"
+                :image="post.userId.imageAvatar"
+                class="p-mr-2 p-mb-2 custom-chip"
+              />
+            </div>
+          </router-link>
         </template>
         <template #content>
           {{ post.content }}
@@ -49,6 +54,11 @@ export default {
 </script>
 
 <style scoped>
+.custom-chip {
+  background: var(--primary-color);
+  color: var(--primary-color-text);
+}
+
 .btn-close {
   position: absolute;
   top: 0rem;

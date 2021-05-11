@@ -141,7 +141,7 @@ const postUser = asyncHandler(async (req, res) => {
 
 /**
  * @description   Get user by id
- * @route         GET /api/profile/:id
+ * @route         GET /api/users/:id
  * @access        Public
  */
 const getUserById = asyncHandler(async (req, res) => {
@@ -172,7 +172,18 @@ const getUserById = asyncHandler(async (req, res) => {
     });
 
   if (user) {
-    res.status(200).json(user);
+    res.status(200).json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        imageAvatar: user.imageAvatar,
+        friends: user.friends,
+        pm: user.pm,
+        createdAt: user.createdAt,
+      },
+    });
   } else {
     res.status(400);
     throw new Error('User not found.');

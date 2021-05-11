@@ -7,6 +7,7 @@ export default createStore({
     status: '',
     token: localStorage.getItem('token') || null,
     user: {},
+    user_info: {},
     post: {},
     posts: [],
     error: '',
@@ -56,10 +57,22 @@ export default createStore({
     del_post_error(state) {
       state.error = 'error';
     },
+    user_info_request(state) {
+      state.status = 'loading';
+    },
+    user_info_success(state, payload) {
+      state.user_info = payload;
+      state.status = 'success';
+    },
+    user_info_error(state, payload) {
+      state.error = payload;
+      state.status = '';
+    },
   },
   getters: {
     modal: (state) => state.modal,
     user: (state) => state.user,
+    user_info: (state) => state.user_info,
     post: (state) => state.post,
     posts: (state) => state.posts,
     isLoggedIn: (state) => !!state.token,
@@ -141,6 +154,27 @@ export default createStore({
           });
       });
     },
+    get_user({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        commit('user_info_request');
+        axios({
+          url: `http://localhost:5000/api/users/${id}`,
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+          },
+        })
+          .then((resp) => {
+            const user = resp.data;
+            commit('user_info_success', user);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit('user_info_error', err);
+            reject(err);
+          });
+      });
+    },
     logout({ commit }) {
       // eslint-disable-next-line
       return new Promise((resolve, reject) => {
@@ -204,6 +238,26 @@ export default createStore({
           .catch((err) => {
             commit('del_post_error');
 
+            reject(err);
+          });
+      });
+    },
+    // eslint-disable-next-line
+    update_avatar({ commit }, formData) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: 'http://localhost:5000/api/upload/avatar',
+          data: formData,
+          method: 'POST',
+          'Content-Type': 'multipart/form-data',
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+          },
+        })
+          .then((resp) => {
+            resolve(resp);
+          })
+          .catch((err) => {
             reject(err);
           });
       });

@@ -2,12 +2,11 @@
   <Card>
     <template #header>
       <img alt="user avatar" :src="data.image" @click="toggleModal(data)" />
-      <!-- <Avatar :image="require(`@/assets/300.jpg`)" size="xlarge" /> -->
     </template>
     <template #title>
       <div class="flex-v-center">
-        <Avatar :image="data.image" shape="circle" />
-        <!-- {{ data.userId.name }} -->
+        <Avatar :image="data.userId.imageAvatar" shape="circle" />
+        {{ data.userId.name }}
       </div>
     </template>
     <template #content>

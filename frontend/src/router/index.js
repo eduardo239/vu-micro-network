@@ -27,7 +27,7 @@ const routes = [
       import(/* webpackChunkName: "notFound" */ '../views/NotFound.vue'),
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
     name: 'Profile',
     meta: {
       requireAuth: true,
