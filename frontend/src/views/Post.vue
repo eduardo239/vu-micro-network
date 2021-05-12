@@ -1,12 +1,15 @@
 <template>
   <Card>
     <template #header>
-      <img alt="user avatar" :src="data.image" @click="toggleModal(data)" />
+      <img alt="user avatar" :src="data.image" @click="toggleModal(data._id)" />
     </template>
     <template #title>
       <div class="flex-v-center">
-        <Avatar :image="data.userId.imageAvatar" shape="circle" />
-        {{ data.userId.name }}
+        <Chip
+          :label="data.userId.name"
+          :image="data.userId.imageAvatar"
+          class="p-mr-2 p-mb-2 custom-chip"
+        />
       </div>
     </template>
     <template #content>
@@ -15,8 +18,11 @@
 
     <template #footer>
       <span class="p-buttonset">
-        <Button icon="pi pi-heart" @click.prevent="like(data._id)" />
-        <Button icon="pi pi-pencil" @click.prevent="edit(data._id)" />
+        <Button
+          :label="data.likes.toString()"
+          icon="pi pi-heart"
+          @click.prevent="like(data._id)"
+        />
         <Button icon="pi pi-trash" @click.prevent="remove(data._id)" />
       </span>
     </template>
@@ -26,24 +32,26 @@
 <script>
 export default {
   name: 'Post',
+  data() {
+    return {
+      messages: [],
+    };
+  },
   props: ['data'],
   methods: {
-    toggleModal(post) {
+    async toggleModal(id) {
+      await this.$store.dispatch('post', id);
       this.$store.commit('toggle_modal');
-      this.$store.dispatch('post', post);
     },
-    like(id) {
-      console.log('like');
-      console.log(id);
+    async like(id) {
+      await this.$store.dispatch('post_like', id);
+      await this.$store.dispatch('posts');
     },
-    edit(id) {
-      console.log(id);
-      console.log('edit');
-    },
-    remove(id) {
-      this.$store.dispatch('del_post', id).then(() => {
-        this.$store.dispatch('posts');
-      });
+
+    async remove(id) {
+      alert(id);
+      await this.$store.dispatch('del_post', id);
+      await this.$store.dispatch('posts');
     },
   },
 };

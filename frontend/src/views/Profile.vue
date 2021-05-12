@@ -37,7 +37,7 @@ export default {
       file: '',
     };
   },
-  mounted() {
+  created() {
     this.$store.dispatch('get_user', this.$route.params.id);
   },
   methods: {
@@ -50,8 +50,9 @@ export default {
       formData.append('avatar', file);
 
       this.$store.dispatch('update_avatar', formData).then(() => {
-        this.$store.dispatch('get_user', this.$route.params.id);
-        this.$store.dispatch('posts');
+        this.$store.dispatch('get_user', this.$route.params.id).then(() => {
+          this.$store.dispatch('posts');
+        });
       });
     },
   },

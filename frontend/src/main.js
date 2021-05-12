@@ -19,7 +19,12 @@ import Chip from 'primevue/chip';
 import FileUpload from 'primevue/fileupload';
 import Badge from 'primevue/badge';
 import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 import Card from 'primevue/card';
+import Inplace from 'primevue/inplace';
+import Textarea from 'primevue/textarea';
+import ConfirmationService from 'primevue/confirmationservice';
+import ConfirmDialog from 'primevue/confirmdialog';
 
 import 'primevue/resources/themes/saga-blue/theme.css'; //theme
 import 'primevue/resources/primevue.min.css'; //core css
@@ -29,6 +34,8 @@ import 'primeflex/primeflex.css';
 createApp(App)
   .use(store)
   .use(PrimeVue, { ripple: true })
+  .use(ToastService)
+  .use(ConfirmationService)
   .component('InputText', InputText)
   .component('Button', Button)
   .component('Message', Message)
@@ -41,7 +48,10 @@ createApp(App)
   .component('FileUpload', FileUpload)
   .component('Badge', Badge)
   .component('Divider', Divider)
-  .component('Toast', Toast)
   .component('Card', Card)
+  .component('Toast', Toast)
+  .component('Inplace', Inplace)
+  .component('Textarea', Textarea)
+  .component('ConfirmDialog', ConfirmDialog)
   .use(router)
   .mount('#app');

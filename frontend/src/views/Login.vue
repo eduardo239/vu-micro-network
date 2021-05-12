@@ -1,7 +1,7 @@
 <template>
-  <div class="p-grid">
-    <div class="p-col-6 p-offset-3">
-      <form class="p-shadow-1 p-my-5 p-p-5" @submit.prevent="login">
+  <div class="p-grid p-jc-center">
+    <div class="p-col-11 p-sm-7 p-md-6 p-lg-6">
+      <form class="p-shadow-1 p-my-4 p-p-5" @submit.prevent="login">
         <h3>Login</h3>
         <div class="p-fluid">
           <div class="p-field">
@@ -29,7 +29,9 @@
         <router-link to="/register" class="link">Sing Up</router-link>
       </form>
 
-      <Message v-if="error" severity="error">{{ error }}</Message>
+      <Message v-if="error || $store.getters.error" severity="error">{{
+        error || $store.getters.error
+      }}</Message>
     </div>
   </div>
 </template>
@@ -61,4 +63,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+form {
+  background-color: #fff;
+}
+</style>

@@ -85,6 +85,12 @@ small,
   font-size: 0.875rem;
   color: var(--blue-500);
 }
+/* --- colors --- */
+
+.custom-chip {
+  background: var(--primary-color) !important;
+  color: var(--primary-color-text) !important;
+}
 /* --- modal --- */
 .modal {
   position: fixed;
@@ -96,8 +102,8 @@ small,
   flex-direction: column;
   min-width: 100vw;
   min-height: 100vh;
-  background-color: rgba(0, 0, 0, 0.2);
   z-index: 100;
+  animation: bgModal 0.1s ease-in forwards;
 }
 
 .modal-content {
@@ -105,4 +111,26 @@ small,
   max-width: 85vw;
   max-height: 85vh;
   overflow-y: auto;
+  animation: showModal 0.1s linear forwards;
+}
+
+@keyframes showModal {
+  0% {
+    opacity: 0.2;
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bgModal {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 }

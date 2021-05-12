@@ -21,9 +21,10 @@ export default createStore({
     },
     auth_success(state, { token, user }) {
       (state.status = 'success'), (state.token = token), (state.user = user);
+      state.error = '';
     },
-    auth_error(state) {
-      state.status = 'error';
+    auth_error(state, error) {
+      state.error = error;
     },
     logout(state) {
       (state.status = ''), (state.token = ''), (state.user = {});
@@ -34,8 +35,16 @@ export default createStore({
     posts_success(state, payload) {
       state.posts = payload;
     },
+    post_request(state) {
+      state.status = 'loading';
+    },
     post_success(state, post) {
       state.post = post;
+      state.status = 'success';
+    },
+    post_error(state, error) {
+      state.post = error;
+      state.status = '';
     },
     auto_login_request(state) {
       state.status = 'loading';
@@ -43,10 +52,10 @@ export default createStore({
     auto_login_success(state, payload) {
       state.status = 'success';
       state.user = payload;
+      state.error = '';
     },
-    auto_login_error(state, payload) {
+    auto_login_error(state) {
       state.status = 'error';
-      state.error = payload;
     },
     del_post_request(state) {
       state.status = 'loading';
@@ -68,8 +77,22 @@ export default createStore({
       state.error = payload;
       state.status = '';
     },
+    new_post_request(state) {
+      state.status = 'loading';
+    },
+    new_post_success(state) {
+      state.status = 'success';
+      state.loading = '';
+    },
+    new_post_error(state, error) {
+      state.status = 'error';
+      state.error = error;
+      state.loading = '';
+    },
   },
   getters: {
+    isLoading: (state) => state.loading,
+    error: (state) => state.error,
     modal: (state) => state.modal,
     user: (state) => state.user,
     user_info: (state) => state.user_info,
@@ -99,10 +122,11 @@ export default createStore({
             commit('auth_success', { token, user });
             resolve(resp);
           })
-          .catch((err) => {
-            commit('auth_error');
+          .catch((error) => {
+            console.log(error.response.data.message);
+            commit('auth_error', error.response.data.message);
             localStorage.removeItem('token');
-            reject(err);
+            reject(error);
           });
       });
     },
@@ -121,10 +145,10 @@ export default createStore({
             commit('auto_login_success', resp.data);
             resolve(resp);
           })
-          .catch((err) => {
-            commit('auto_login_error', err);
+          .catch((error) => {
+            commit('auto_login_error');
             window.localStorage.removeItem('token');
-            reject(err);
+            reject(error);
           });
       });
     },
@@ -147,10 +171,10 @@ export default createStore({
             commit('auth_success', { token, user });
             resolve(resp);
           })
-          .catch((err) => {
-            commit('auth_error', err);
+          .catch((error) => {
+            commit('auth_error', error.response.data.message);
             localStorage.removeItem('token');
-            reject(err);
+            reject(error);
           });
       });
     },
@@ -169,9 +193,9 @@ export default createStore({
             commit('user_info_success', user);
             resolve(resp);
           })
-          .catch((err) => {
-            commit('user_info_error', err);
-            reject(err);
+          .catch((error) => {
+            commit('user_info_error', error.response.data.message);
+            reject(error);
           });
       });
     },
@@ -197,25 +221,69 @@ export default createStore({
         });
       });
     },
-    post({ commit }, post) {
+    post({ commit }, id) {
       // eslint-disable-next-line
+      // return new Promise((resolve, reject) => {
+      //   commit('post_success', post);
+      // });
       return new Promise((resolve, reject) => {
-        commit('post_success', post);
+        commit('post_request');
+        axios({
+          url: `http://localhost:5000/api/posts/${id}`,
+          method: 'GET',
+        })
+          .then((resp) => {
+            const post = resp.data;
+            commit('post_success', post);
+            resolve(resp);
+          })
+          .catch((error) => {
+            commit('post_error', error.response.data.message);
+            reject(error);
+          });
       });
     },
     // eslint-disable-next-line
     new_post({ commit }, formData) {
       return new Promise((resolve, reject) => {
+        commit('new_post_request');
         axios({
           url: 'http://localhost:5000/api/posts/',
           data: formData,
           method: 'POST',
-          'Content-Type': 'multipart/form-data',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         })
           .then((resp) => {
+            commit('new_post_success');
             resolve(resp);
           })
           .catch((err) => {
+            commit('new_post_error');
+            reject(err);
+          });
+      });
+    },
+    // eslint-disable-next-line
+    update_post({ commit }, { id, content }) {
+      return new Promise((reject, resolve) => {
+        axios({
+          url: `http://localhost:5000/api/posts/${id}`,
+          method: 'PUT',
+          data: { content },
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((resp) => {
+            this.posts();
+            resolve(resp);
+            // commit('del_post_success');
+          })
+          .catch((err) => {
+            // commit('del_post_error');
             reject(err);
           });
       });
@@ -238,6 +306,21 @@ export default createStore({
           .catch((err) => {
             commit('del_post_error');
 
+            reject(err);
+          });
+      });
+    },
+    // eslint-disable-next-line
+    post_like({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: `http://localhost:5000/api/posts/like/${id}`,
+          method: 'GET',
+        })
+          .then((resp) => {
+            resolve(resp);
+          })
+          .catch((err) => {
             reject(err);
           });
       });

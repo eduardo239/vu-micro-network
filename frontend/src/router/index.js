@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import store from '../store';
 import Home from '../views/Home.vue';
-import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
@@ -18,13 +17,8 @@ const routes = [
   {
     path: '/register',
     name: 'Register',
-    component: NotFound,
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
     component: () =>
-      import(/* webpackChunkName: "notFound" */ '../views/NotFound.vue'),
+      import(/* webpackChunkName: "register" */ '../views/Register.vue'),
   },
   {
     path: '/profile/:id',
@@ -34,6 +28,12 @@ const routes = [
     },
     component: () =>
       import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () =>
+      import(/* webpackChunkName: "notFound" */ '../views/NotFound.vue'),
   },
 ];
 

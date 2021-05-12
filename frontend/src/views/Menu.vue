@@ -16,7 +16,7 @@ export default {
         {
           label: 'Profile',
           icon: 'pi pi-fw pi-user',
-          to: `/profile/`,
+          to: `/profile`, // FIXME
           visible: () => this.$store.getters.isLoggedIn,
         },
         {
@@ -42,6 +42,7 @@ export default {
           icon: 'pi pi-fw pi-sun',
         },
       ],
+      userId: '',
     };
   },
   methods: {
@@ -52,6 +53,7 @@ export default {
         .catch((err) => console.log(err));
     },
   },
+  mounted() {},
 };
 </script>
 

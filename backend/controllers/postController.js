@@ -125,7 +125,7 @@ const deletePost = asyncHandler(async (req, res) => {
 
 /**
  * @description   Like button
- * @route         DELETE /api/posts/like/:id
+ * @route         GET /api/posts/like/:id
  * @access        Private
  */
 const post_like = asyncHandler(async (req, res) => {

@@ -1,7 +1,7 @@
 <template>
-  <div class="p-grid">
-    <div class="p-col-6 p-offset-3">
-      <form class="p-shadow-1 p-my-5 p-p-5" @submit.prevent="register">
+  <div class="p-grid p-jc-center">
+    <div class="p-col-11 p-sm-7 p-md-6 p-lg-6">
+      <form class="p-shadow-1 p-my-4 p-p-5" @submit.prevent="register">
         <h3>Register</h3>
         <div class="p-fluid">
           <div class="p-field">
@@ -46,7 +46,9 @@
         </div>
         <router-link to="/login" class="link">Sing In</router-link>
       </form>
-      <Message v-if="error" severity="error">{{ error }}</Message>
+      <Message v-if="error || $store.getters.error" severity="error">{{
+        error || $store.getters.error
+      }}</Message>
     </div>
   </div>
 </template>
@@ -64,20 +66,31 @@ export default {
     };
   },
   methods: {
-    register() {
+    async register() {
       let data = {
         name: this.name,
         email: this.email,
         password: this.password,
       };
 
-      this.$store
+      if (this.password !== this.password_confirmation) {
+        this.error = 'Passwords must match.';
+        return;
+      }
+
+      await this.$store
         .dispatch('register', data)
         .then(() => this.$router.push('/'))
         .catch((err) => console.log(err));
+
+      await this.$store.dispatch('auto_login');
     },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+form {
+  background-color: #fff;
+}
+</style>
