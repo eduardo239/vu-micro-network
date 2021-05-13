@@ -26,6 +26,17 @@
           @change="onChange"
         />
       </label>
+      <div
+        v-else
+        class="p-grid p-jc-center p-ai-center vertical-container p-p-4"
+      >
+        <ProgressSpinner
+          style="width:30px;height:30px"
+          strokeWidth="3"
+          fill="none"
+          animationDuration=".5s"
+        />
+      </div>
     </div>
     <div v-else class="p-grid p-jc-center p-ai-center vertical-container p-p-4">
       <ProgressSpinner

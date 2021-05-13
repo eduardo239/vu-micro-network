@@ -1,10 +1,6 @@
 <template>
   <div class="App">
     <Menu />
-    <!-- <transition>
-      <router-view></router-view>
-    </transition> -->
-
     <router-view v-slot="{ Component }">
       <transition name="slide-fade" mode="out-in">
         <component :is="Component" />

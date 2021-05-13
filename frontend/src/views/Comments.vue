@@ -102,9 +102,7 @@ export default {
       console.log('edit');
     },
     async commentDelete(postId, commentId) {
-      console.log(1);
       await this.$store.dispatch('delete_comment', commentId);
-      console.log(2);
       await this.$store.dispatch('post', postId);
     },
   },
