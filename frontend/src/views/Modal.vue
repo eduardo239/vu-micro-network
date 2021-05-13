@@ -11,11 +11,13 @@
           <img alt="user avatar" :src="post.image" />
         </template>
         <template #title>
-          <Chip
-            :label="post.userId.name"
-            :image="post.userId.imageAvatar"
-            class="p-mr-2 p-mb-2 custom-chip"
-          />
+          <div class="p-grid p-ai-center vertical-container">
+            <Chip
+              :label="post.userId.name"
+              :image="post.userId.imageAvatar"
+              class="p-mr-2 p-mb-2 custom-chip"
+            /><span class="date">{{ post.createdAt }}</span>
+          </div>
         </template>
         <template #content>
           <Inplace :closable="true">
@@ -47,7 +49,6 @@
           </span>
         </template>
       </Card>
-      {{ old_content }}
     </div>
   </section>
 </template>

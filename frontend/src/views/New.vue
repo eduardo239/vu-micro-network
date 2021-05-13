@@ -1,6 +1,10 @@
 <template>
   <div v-if="this.$store.getters.isLoggedIn">
-    <form class="p-inputgroup p-mb-2" enctype="multipart/form-data">
+    <form
+      v-if="!loading"
+      class="p-inputgroup p-mb-2"
+      enctype="multipart/form-data"
+    >
       <FileUpload
         mode="basic"
         name="demo[]"
@@ -16,6 +20,14 @@
         @click.prevent="onSubmit"
       />
     </form>
+    <div v-else class="p-grid p-jc-center p-ai-center vertical-container p-p-4">
+      <ProgressSpinner
+        style="width:50px;height:50px"
+        strokeWidth="1"
+        fill="none"
+        animationDuration=".5s"
+      />
+    </div>
     <div v-if="error">
       <Message severity="info">{{ error }}</Message>
     </div>
@@ -46,7 +58,7 @@ export default {
       const file = this.$refs.file.files[0];
       this.image = file;
     },
-    onSubmit() {
+    async onSubmit() {
       if (!this.image || !this.content) {
         this.error = 'Empty content and/or image.';
         return;
@@ -58,9 +70,8 @@ export default {
         formData.append('userId', this.user_id.user._id);
         formData.append('content', this.content);
 
-        this.$store.dispatch('new_post', formData).then(() => {
-          this.$store.dispatch('posts');
-        });
+        await this.$store.dispatch('new_post', formData);
+        await this.$store.dispatch('posts');
 
         this.image = '';
         this.content = '';

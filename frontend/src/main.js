@@ -25,8 +25,10 @@ import Inplace from 'primevue/inplace';
 import Textarea from 'primevue/textarea';
 import ConfirmationService from 'primevue/confirmationservice';
 import ConfirmDialog from 'primevue/confirmdialog';
+import ProgressSpinner from 'primevue/progressspinner';
 
-import 'primevue/resources/themes/saga-blue/theme.css'; //theme
+//import 'primevue/resources/themes/saga-blue/theme.css'; //theme
+import 'primevue/resources/themes/arya-orange/theme.css';
 import 'primevue/resources/primevue.min.css'; //core css
 import 'primeicons/primeicons.css'; //icons
 import 'primeflex/primeflex.css';
@@ -53,5 +55,6 @@ createApp(App)
   .component('Inplace', Inplace)
   .component('Textarea', Textarea)
   .component('ConfirmDialog', ConfirmDialog)
+  .component('ProgressSpinner', ProgressSpinner)
   .use(router)
   .mount('#app');

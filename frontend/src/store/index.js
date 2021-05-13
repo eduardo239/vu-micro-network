@@ -77,6 +77,9 @@ export default createStore({
       state.error = payload;
       state.status = '';
     },
+    user_info_reset(state) {
+      state.user_info = {};
+    },
     new_post_request(state) {
       state.status = 'loading';
     },
@@ -131,6 +134,7 @@ export default createStore({
       });
     },
     auto_login({ commit }) {
+      // eslint-disable-next-line
       return new Promise((resolve, reject) => {
         commit('auto_login_request');
         const token = localStorage.getItem('token');
@@ -146,9 +150,9 @@ export default createStore({
             resolve(resp);
           })
           .catch((error) => {
-            commit('auto_login_error');
+            commit('auto_login_error', error);
             window.localStorage.removeItem('token');
-            reject(error);
+            // reject(error);
           });
       });
     },
@@ -199,6 +203,9 @@ export default createStore({
           });
       });
     },
+    reset_user({ commit }) {
+      commit('user_info_reset');
+    },
     logout({ commit }) {
       // eslint-disable-next-line
       return new Promise((resolve, reject) => {
@@ -215,10 +222,15 @@ export default createStore({
         axios({
           url: 'http://localhost:5000/api/posts/',
           method: 'GET',
-        }).then((resp) => {
-          const posts = resp.data;
-          commit('posts_success', posts);
-        });
+        })
+          .then((resp) => {
+            const posts = resp.data;
+            commit('posts_success', posts);
+            resolve(resp);
+          })
+          .then((error) => {
+            reject(error);
+          });
       });
     },
     post({ commit }, id) {

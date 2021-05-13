@@ -1,15 +1,18 @@
 <template>
-  <Card>
+  <Card class="p-mb-3">
     <template #header>
       <img alt="user avatar" :src="data.image" @click="toggleModal(data._id)" />
     </template>
     <template #title>
       <div class="flex-v-center">
-        <Chip
-          :label="data.userId.name"
-          :image="data.userId.imageAvatar"
-          class="p-mr-2 p-mb-2 custom-chip"
-        />
+        <router-link :to="`/profile/${data.userId._id}`">
+          <Chip
+            @click="userProfile(data.userId._id)"
+            :label="data.userId.name"
+            :image="data.userId.imageAvatar"
+            class="p-mr-2 p-mb-2 custom-chip"
+          />
+        </router-link>
       </div>
     </template>
     <template #content>
@@ -52,6 +55,9 @@ export default {
       alert(id);
       await this.$store.dispatch('del_post', id);
       await this.$store.dispatch('posts');
+    },
+    userProfile(id) {
+      this.$router.push(`/profile/${id}`); // FIXME
     },
   },
 };

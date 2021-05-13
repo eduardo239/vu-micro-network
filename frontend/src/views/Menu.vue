@@ -16,8 +16,8 @@ export default {
         {
           label: 'Profile',
           icon: 'pi pi-fw pi-user',
-          to: `/profile`, // FIXME
           visible: () => this.$store.getters.isLoggedIn,
+          command: () => this.userProfile(),
         },
         {
           label: 'Login',
@@ -42,7 +42,6 @@ export default {
           icon: 'pi pi-fw pi-sun',
         },
       ],
-      userId: '',
     };
   },
   methods: {
@@ -52,8 +51,10 @@ export default {
         .then(() => this.$router.push('/login'))
         .catch((err) => console.log(err));
     },
+    userProfile() {
+      this.$router.push(`/profile/${this.$store.getters.user.user._id}`);
+    },
   },
-  mounted() {},
 };
 </script>
 

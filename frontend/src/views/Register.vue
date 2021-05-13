@@ -1,7 +1,7 @@
 <template>
   <div class="p-grid p-jc-center">
     <div class="p-col-11 p-sm-7 p-md-6 p-lg-6">
-      <form class="p-shadow-1 p-my-4 p-p-5" @submit.prevent="register">
+      <form class="p-shadow-1 p-my-4 p-p-5 App-form" @submit.prevent="register">
         <h3>Register</h3>
         <div class="p-fluid">
           <div class="p-field">
@@ -89,8 +89,4 @@ export default {
 };
 </script>
 
-<style scoped>
-form {
-  background-color: #fff;
-}
-</style>
+<style></style>

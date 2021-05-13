@@ -1,7 +1,7 @@
 <template>
   <div class="p-grid p-jc-center">
     <div class="p-col-11 p-sm-7 p-md-6 p-lg-6">
-      <form class="p-shadow-1 p-my-4 p-p-5" @submit.prevent="login">
+      <form class="p-shadow-1 p-my-4 p-p-5 App-form" @submit.prevent="login">
         <h3>Login</h3>
         <div class="p-fluid">
           <div class="p-field">
@@ -49,13 +49,14 @@ export default {
     };
   },
   methods: {
-    login() {
+    async login() {
       this.error = '';
-      this.$store
-        .dispatch('login', {
-          email: this.email,
-          password: this.password,
-        })
+      await this.$store.dispatch('login', {
+        email: this.email,
+        password: this.password,
+      });
+      await this.$store
+        .dispatch('auto_login')
         .then(() => this.$router.push('/'))
         .catch((err) => console.log(err));
     },
@@ -63,8 +64,4 @@ export default {
 };
 </script>
 
-<style scoped>
-form {
-  background-color: #fff;
-}
-</style>
+<style scoped></style>
