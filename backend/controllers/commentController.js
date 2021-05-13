@@ -58,7 +58,7 @@ const getCommentById = asyncHandler(async (req, res) => {
  * @route         DELETE /api/comments/:id
  * @access        Private, Admin
  */
-const deleteCommentById = asyncHandler(async (req, res) => {
+const deleteComment = asyncHandler(async (req, res) => {
   const commentId = req.params.id;
 
   const comment = await Comment.findById(commentId);
@@ -90,6 +90,28 @@ const getComments = asyncHandler(async (req, res) => {
   } else {
     res.status(404);
     throw new Error('Comments not found.');
+  }
+});
+
+/**
+ * @description   Comment Like
+ * @route         GET /api/comments/:id
+ * @access        Private
+ */
+const likeComment = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  const comment = await Comment.findByIdAndUpdate(
+    { _id: id },
+    { $inc: { likes: 1 } },
+    { new: true }
+  );
+
+  if (comment) {
+    res.status(200).json(comment);
+  } else {
+    res.status(404);
+    throw new Error('Comment not found.');
   }
 });
 
@@ -217,11 +239,12 @@ const delete_pm = asyncHandler(async (req, res) => {
 export {
   postNewComment,
   getCommentById,
-  deleteCommentById,
+  deleteComment,
   getComments,
   putComment,
   post_new_pm,
   get_all_pm,
   get_pm_by_user,
   delete_pm,
+  likeComment,
 };

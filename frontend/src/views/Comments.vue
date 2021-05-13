@@ -1,7 +1,11 @@
 <template>
   <section>
-    <div v-for="comment in post.comments" :key="comment._id">
-      {{ comment }}
+    <div
+      v-for="comment in post.comments"
+      :key="comment._id"
+      class="App-comment"
+    >
+      <!-- {{ comment }} -->
       <Card>
         <template #title>
           <router-link :to="`/profile/${comment.userId._id}`">
@@ -18,9 +22,25 @@
           {{ comment.content }}
         </template>
         <template #footer>
-          <Button icon="pi pi-heart" @click="commentLike(comment._id)" />
-          <Button icon="pi pi-pencil" @click="commentEdit(comment._id)" />
-          <Button icon="pi pi-trash" @click="commentDelete(comment._id)" />
+          <Button
+            class="p-button-sm
+            p-button-rounded p-button-text"
+            :label="comment.likes.toString()"
+            icon="pi pi-heart"
+            @click="commentLike(post._id, comment._id)"
+          />
+          <Button
+            class="p-button-sm
+            p-button-rounded p-button-text"
+            icon="pi pi-pencil"
+            @click="commentEdit(comment._id)"
+          />
+          <Button
+            class="p-button-sm
+            p-button-rounded p-button-text"
+            icon="pi pi-trash"
+            @click="commentDelete(post._id, comment._id)"
+          />
         </template>
       </Card>
     </div>
@@ -33,10 +53,18 @@
         cols="30"
       />
       <Button
-        style="width: 100%"
+        v-if="!loading"
+        style="width: 100%; paddingRight: 2rem"
         label="Send"
         type="submit"
         @click.prevent="new_comment(post._id)"
+      />
+      <Button
+        v-else
+        icon="pi pi-spin pi-spinner"
+        style="width: 100%; paddingRight: 2rem"
+        label="Sending"
+        type="submit"
       />
     </form>
   </section>
@@ -49,22 +77,35 @@ export default {
   data() {
     return {
       content: '',
+      loading: false,
     };
   },
   methods: {
     async new_comment(postId) {
-      const data = { postId: postId, content: this.content };
-      await this.$store.dispatch('new_comment', data);
-      await this.$store.dispatch('post', postId);
+      this.loading = true;
+      try {
+        const data = { postId: postId, content: this.content };
+        await this.$store.dispatch('new_comment', data);
+        await this.$store.dispatch('post', postId);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.content = '';
+        this.loading = false;
+      }
     },
-    commentLike() {
-      console.log('like');
+    async commentLike(postId, commentId) {
+      await this.$store.dispatch('like_comment', commentId);
+      await this.$store.dispatch('post', postId);
     },
     commentEdit() {
       console.log('edit');
     },
-    commentDelete() {
-      console.log('del');
+    async commentDelete(postId, commentId) {
+      console.log(1);
+      await this.$store.dispatch('delete_comment', commentId);
+      console.log(2);
+      await this.$store.dispatch('post', postId);
     },
   },
 };

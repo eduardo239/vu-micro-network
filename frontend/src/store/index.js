@@ -377,6 +377,44 @@ export default createStore({
           });
       });
     },
+    // http://localhost:5000/api/comments/like/609d3b63c45c401d0447af53
+    // eslint-disable-next-line
+    like_comment({ commit }, commentId) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: `http://localhost:5000/api/comments/like/${commentId}`,
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+          },
+        })
+          .then((resp) => {
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
+    //http://localhost:5000/api/comments/609d621504b35615bc309702
+    // eslint-disable-next-line
+    delete_comment({ commit }, commentId) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: `http://localhost:5000/api/comments/${commentId}`,
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+          },
+        })
+          .then((resp) => {
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
   },
   modules: {},
 });
