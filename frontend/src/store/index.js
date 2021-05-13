@@ -357,6 +357,26 @@ export default createStore({
           });
       });
     },
+    // eslint-disable-next-line
+    new_comment({ commit }, { postId, content }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: 'http://localhost:5000/api/comments',
+          data: { postId, content },
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((resp) => {
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    },
   },
   modules: {},
 });

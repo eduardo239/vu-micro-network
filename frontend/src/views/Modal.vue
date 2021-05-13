@@ -1,26 +1,32 @@
 <template>
-  <section class="modal">
+  <section class="modal" @click="outsideClick">
     <Button
       icon="pi pi-fw pi-times"
       class="p-button-danger btn-close"
       @click="toggleModal"
     />
-    <div class="modal-content">
+    <div class="modal-content" v-if="post" ref="modalContent">
       <Card>
         <template #header>
           <img alt="user avatar" :src="post.image" />
         </template>
         <template #title>
           <div class="p-grid p-ai-center vertical-container">
-            <Chip
-              :label="post.userId.name"
-              :image="post.userId.imageAvatar"
-              class="p-mr-2 p-mb-2 custom-chip"
-            /><span class="date">{{ post.createdAt }}</span>
+            <router-link :to="`/profile/${post.userId._id}`">
+              <Chip
+                :label="post.userId.name"
+                :image="
+                  post.userId.imageAvatar || require('../assets/avatar1.svg')
+                "
+                class="p-mr-2 p-mb-2 custom-chip"
+              />
+            </router-link>
+
+            <span class="date">{{ post.createdAt }}</span>
           </div>
         </template>
         <template #content>
-          <Inplace :closable="true">
+          <Inplace :closable="true" ref="inplaceRef">
             <template #display>
               {{ old_content || 'Click to Edit' }}
             </template>
@@ -49,19 +55,31 @@
           </span>
         </template>
       </Card>
+      <Comments :post="post" />
+    </div>
+    <div v-else class="p-grid p-jc-center p-ai-center vertical-container p-p-4">
+      <ProgressSpinner
+        style="width:30px;height:30px"
+        strokeWidth="3"
+        fill="none"
+        animationDuration=".5s"
+      />
     </div>
   </section>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import Comments from './Comments';
 
 export default {
   name: 'Modal',
+  components: { Comments },
   data() {
     return {
       new_content: '',
       old_content: '',
+      modalContent: '',
     };
   },
   methods: {
@@ -106,12 +124,20 @@ export default {
         },
       });
     },
+    outsideClick(e) {
+      if (this.modalContent && !this.inplaceRef)
+        if (this.modalContent && !this.modalContent.contains(e.target)) {
+          this.$store.commit('toggle_modal');
+        }
+    },
   },
   computed: {
     ...mapGetters(['post']),
   },
   mounted() {
     this.old_content = this.post.content;
+    this.modalContent = this.$refs.modalContent;
+    this.inplaceRef = this.$refs.inplaceRef;
   },
 };
 </script>

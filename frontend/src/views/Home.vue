@@ -24,6 +24,11 @@ export default {
   computed: {
     ...mapGetters(['posts']),
   },
+  unmounted() {
+    if (this.$store.getters.modal) {
+      this.$store.commit('toggle_modal');
+    }
+  },
 };
 </script>
 

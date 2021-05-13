@@ -103,6 +103,9 @@ small,
   background: var(--primary-color) !important;
   color: var(--primary-color-text) !important;
 }
+.p-chip-text {
+  font-size: 0.8rem;
+}
 /* --- form --- */
 
 .App-form {

@@ -2,16 +2,18 @@
   <section class="p-p-5">
     <div
       v-if="user_info.user !== undefined"
-      class="p-grid p-jc-center p-ai-center vertical-container p-p-4"
+      class="p-grid p-jc-center p-ai-center vertical-container p-mt-3"
     >
       <label for="avatar" v-if="!loading">
-        <!-- <Avatar
+        <Avatar
           class="avatar"
-          :image="user_info.user.imageAvatar || ''"
+          :image="
+            user_info.user.imageAvatar || require('../assets/avatar1.svg')
+          "
           size="xlarge"
           shape="circle"
-        /> -->
-        <p style="color: white">
+        />
+        <p style="color: white; text-align: center">
           {{ user_info.user.name }}
         </p>
 
@@ -35,8 +37,17 @@
     </div>
 
     <span class="p-buttonset p-mt-3">
-      <Button label="Add" icon="pi pi-check" />
-      <Button label="Remove" icon="pi pi-times" class="p-button-danger" />
+      <Button
+        label="Add"
+        icon="pi pi-check"
+        @click="addFriend(user_info.user)"
+      />
+      <Button
+        label="Remove"
+        icon="pi pi-times"
+        class="p-button-danger"
+        @click="removeFriend(user_info.user)"
+      />
     </span>
   </section>
 </template>
@@ -74,6 +85,12 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    addFriend(user) {
+      console.log(user);
+    },
+    removeFriend(user) {
+      console.log(user);
     },
   },
   computed: {

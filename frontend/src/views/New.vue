@@ -13,7 +13,7 @@
         ref="file"
         @change="onSelect"
       />
-      <InputText placeholder="Vote" v-model="content" />
+      <InputText placeholder="Post new content.." v-model="content" />
       <Button
         icon="pi pi-send"
         class="p-button-primary"
@@ -23,7 +23,7 @@
     <div v-else class="p-grid p-jc-center p-ai-center vertical-container p-p-4">
       <ProgressSpinner
         style="width:50px;height:50px"
-        strokeWidth="1"
+        strokeWidth="3"
         fill="none"
         animationDuration=".5s"
       />

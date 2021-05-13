@@ -1,35 +1,43 @@
 <template>
-  <Card class="p-mb-3">
-    <template #header>
-      <img alt="user avatar" :src="data.image" @click="toggleModal(data._id)" />
-    </template>
-    <template #title>
-      <div class="flex-v-center">
-        <router-link :to="`/profile/${data.userId._id}`">
-          <Chip
-            @click="userProfile(data.userId._id)"
-            :label="data.userId.name"
-            :image="data.userId.imageAvatar"
-            class="p-mr-2 p-mb-2 custom-chip"
-          />
-        </router-link>
-      </div>
-    </template>
-    <template #content>
-      {{ data.content }}
-    </template>
-
-    <template #footer>
-      <span class="p-buttonset">
-        <Button
-          :label="data.likes.toString()"
-          icon="pi pi-heart"
-          @click.prevent="like(data._id)"
+  <div>
+    <Card class="p-mb-3">
+      <template #header>
+        <img
+          alt="user avatar"
+          :src="data.image"
+          @click="toggleModal(data._id)"
         />
-        <Button icon="pi pi-trash" @click.prevent="remove(data._id)" />
-      </span>
-    </template>
-  </Card>
+      </template>
+      <template #title>
+        <div class="flex-v-center">
+          <router-link :to="`/profile/${data.userId._id}`">
+            <Chip
+              @click="userProfile(data.userId._id)"
+              :label="data.userId.name"
+              :image="
+                data.userId.imageAvatar || require('../assets/avatar1.svg')
+              "
+              class="p-mr-2 p-mb-2 custom-chip"
+            />
+          </router-link>
+        </div>
+      </template>
+      <template #content>
+        {{ data.content }}
+      </template>
+
+      <template #footer>
+        <span class="p-buttonset">
+          <Button
+            :label="data.likes.toString()"
+            icon="pi pi-heart"
+            @click.prevent="like(data._id)"
+          />
+          <Button icon="pi pi-trash" @click.prevent="remove(data._id)" />
+        </span>
+      </template>
+    </Card>
+  </div>
 </template>
 
 <script>

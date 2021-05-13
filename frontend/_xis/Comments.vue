@@ -27,7 +27,7 @@ export default {
   props: ['comments'],
   data() {
     return {
-      image: require('../assets/300.jpg'),
+      image: require('../assets/avatarMolde.jpg'),
     };
   },
 };
