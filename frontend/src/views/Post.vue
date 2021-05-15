@@ -63,9 +63,10 @@ export default {
           this.$toast.add({
             severity: 'info',
             summary: 'Confirmed',
-            detail: 'You have accepted',
+            detail: 'Post deleted',
             life: 3000,
           });
+          // TODO check if user is logged in && user is the owner
           await this.$store.dispatch('del_post', id);
           await this.$store.dispatch('posts');
         },
