@@ -1,5 +1,7 @@
 <template>
-  <Menubar :model="items" />
+  <div>
+    <Menubar :model="items" class="p-mb-2 p-mt-2" />
+  </div>
 </template>
 
 <script>
@@ -11,18 +13,18 @@ export default {
         {
           label: 'Home',
           icon: 'pi pi-fw pi-home',
-          to: '/',
+          to: { name: 'home' },
         },
         {
           label: 'Profile',
           icon: 'pi pi-fw pi-user',
           visible: () => this.$store.getters.isLoggedIn,
-          command: () => this.userProfile(),
+          // command: () => this.userProfile(),
         },
         {
           label: 'Login',
           icon: 'pi pi-fw pi-key',
-          to: '/login',
+          to: { name: 'login' },
           visible: () => !this.$store.getters.isLoggedIn,
         },
         {
@@ -38,12 +40,18 @@ export default {
           visible: () => this.$store.getters.isLoggedIn,
         },
         {
-          label: 'Theme',
-          icon: 'pi pi-fw pi-sun',
+          label: 'About',
+          icon: 'pi pi-fw pi-times',
+          to: 'about',
         },
+        // {
+        //   label: 'Theme',
+        //   icon: 'pi pi-fw pi-sun',
+        // },
       ],
     };
   },
+  created() {},
   methods: {
     logout() {
       this.$store
@@ -52,7 +60,7 @@ export default {
         .catch((err) => console.log(err));
     },
     userProfile() {
-      this.$router.push(`/profile/${this.$store.getters.user.user._id}`);
+      this.$router.push(`/profile/${this.$store.getters.login.user._id}`);
     },
   },
 };

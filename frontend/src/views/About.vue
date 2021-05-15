@@ -1,5 +1,7 @@
 <template>
-  <p>secure page</p>
+  <div>
+    About
+  </div>
 </template>
 
 <script>

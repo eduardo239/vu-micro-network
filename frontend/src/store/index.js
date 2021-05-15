@@ -6,8 +6,8 @@ export default createStore({
     modal: false,
     status: '',
     token: localStorage.getItem('token') || null,
+    login: {},
     user: {},
-    user_info: {},
     post: {},
     posts: [],
     error: '',
@@ -20,14 +20,20 @@ export default createStore({
       state.status = 'loading';
     },
     auth_success(state, { token, user }) {
-      (state.status = 'success'), (state.token = token), (state.user = user);
+      state.status = 'success';
+      state.token = token;
+      state.user = user;
       state.error = '';
+      state.login = user;
     },
     auth_error(state, error) {
       state.error = error;
     },
     logout(state) {
-      (state.status = ''), (state.token = ''), (state.user = {});
+      state.status = '';
+      state.token = '';
+      state.user = {};
+      state.login = {};
     },
     posts_request(state) {
       state.status = 'loading';
@@ -53,6 +59,7 @@ export default createStore({
       state.status = 'success';
       state.user = payload;
       state.error = '';
+      state.login = payload;
     },
     auto_login_error(state) {
       state.status = 'error';
@@ -66,19 +73,19 @@ export default createStore({
     del_post_error(state) {
       state.error = 'error';
     },
-    user_info_request(state) {
+    user_request(state) {
       state.status = 'loading';
     },
-    user_info_success(state, payload) {
-      state.user_info = payload;
+    user_success(state, payload) {
+      state.user = payload;
       state.status = 'success';
     },
-    user_info_error(state, payload) {
+    user_error(state, payload) {
       state.error = payload;
       state.status = '';
     },
-    user_info_reset(state) {
-      state.user_info = {};
+    user_reset(state) {
+      state.user = {};
     },
     new_post_request(state) {
       state.status = 'loading';
@@ -92,19 +99,28 @@ export default createStore({
       state.error = error;
       state.loading = '';
     },
+    add_friend_error(state, payload) {
+      state.error = payload;
+    },
+    reset_error(state) {
+      state.error = '';
+    },
   },
   getters: {
     isLoading: (state) => state.loading,
     error: (state) => state.error,
     modal: (state) => state.modal,
+    login: (state) => state.login,
     user: (state) => state.user,
-    user_info: (state) => state.user_info,
     post: (state) => state.post,
     posts: (state) => state.posts,
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
   },
   actions: {
+    reset_error({ commit }) {
+      commit('reset_error');
+    },
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request');
@@ -184,7 +200,7 @@ export default createStore({
     },
     get_user({ commit }, id) {
       return new Promise((resolve, reject) => {
-        commit('user_info_request');
+        commit('user_request');
         axios({
           url: `http://localhost:5000/api/users/${id}`,
           method: 'GET',
@@ -194,17 +210,17 @@ export default createStore({
         })
           .then((resp) => {
             const user = resp.data;
-            commit('user_info_success', user);
+            commit('user_success', user);
             resolve(resp);
           })
           .catch((error) => {
-            commit('user_info_error', error.response.data.message);
+            commit('user_error', error.response.data.message);
             reject(error);
           });
       });
     },
     reset_user({ commit }) {
-      commit('user_info_reset');
+      commit('user_reset');
     },
     logout({ commit }) {
       // eslint-disable-next-line
@@ -415,6 +431,29 @@ export default createStore({
           });
       });
     },
+    // eslint-disable-next-line
+    add_friend({ commit }, { userId, friendId }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: 'http://localhost:5000/api/friends/',
+          method: 'POST',
+          data: { userId, friendId },
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((resp) => {
+            resolve(resp);
+          })
+          .catch((error) => {
+            console.log(error);
+            commit('add_friend_error', error.response.data.message);
+            reject(error);
+          });
+      });
+    },
   },
+
   modules: {},
 });

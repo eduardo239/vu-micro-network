@@ -12,13 +12,12 @@ html {
 } /*16px*/
 
 body {
-  background: var(--white);
   font-family: 'Poppins', Arial, Helvetica, sans-serif;
   font-weight: 400;
   line-height: 1.5;
-  /* color: var(--surface-800);
-  background-color: var(--surface-c); */
-  background-color: var(--surface-b);
+  /* color: var(--surface-800); */
+  /* background-color: var(--surface-c); */
+  /* background-color: var(--surface-b); */
 }
 
 a {
@@ -71,6 +70,30 @@ small,
   font-size: 0.8rem;
 }
 
+.App {
+  max-width: 608px;
+  margin: 0 auto;
+}
+
+.App-table {
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  color: #2b2b2b;
+  border: 1px solid #e2e2e6;
+}
+.App-table-user {
+  gap: 0.5rem;
+  padding: 0 0 0 0.5rem;
+}
+th {
+  text-align: left;
+  font-weight: 500;
+}
+td,
+th {
+  padding: 0.2rem;
+  border: 1px solid #ccc;
+}
 /* --- date --- */
 .date {
   margin-bottom: 0.5rem;
@@ -86,6 +109,14 @@ small,
 .flex-v-center {
   display: flex;
   align-items: center;
+}
+.flex-v-start {
+  display: flex;
+  align-items: flex-start;
+}
+.flex-h-space {
+  display: flex;
+  justify-content: space-between;
 }
 /* --- width --- */
 .c-100 {
@@ -108,12 +139,6 @@ small,
 }
 /* --- form --- */
 
-.App-form {
-  /* background-color: #fff; */
-  color: white;
-  background-color: var(--surface-100);
-  border: 3px solid var(--surface-800);
-}
 /* --- modal --- */
 .modal {
   position: fixed;
@@ -130,9 +155,16 @@ small,
 }
 /* --- comments --- */
 
-.App-comment {
+.App-comments {
   border-bottom: 1px solid var(--surface-400);
   animation: showModal 0.1s linear forwards;
+  padding: 0.25rem;
+  margin: 0.25rem;
+}
+.App-comment {
+  word-break: break-all;
+  white-space: pre-line;
+  margin: 0;
 }
 
 .modal-content {

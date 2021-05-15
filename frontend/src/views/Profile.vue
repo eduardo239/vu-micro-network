@@ -1,22 +1,13 @@
 <template>
-  <section class="p-p-5">
-    <div
-      v-if="user_info.user !== undefined"
-      class="p-grid p-jc-center p-ai-center vertical-container p-mt-3"
-    >
+  <section>
+    <div v-if="user.user">
       <label for="avatar" v-if="!loading">
         <Avatar
           class="avatar"
-          :image="
-            user_info.user.imageAvatar || require('../assets/avatar1.svg')
-          "
+          :image="user.user.imageAvatar || require('../assets/avatar1.svg')"
           size="xlarge"
           shape="circle"
         />
-        <p style="color: white; text-align: center">
-          {{ user_info.user.name }}
-        </p>
-
         <input
           style="display: none"
           type="file"
@@ -26,10 +17,7 @@
           @change="onChange"
         />
       </label>
-      <div
-        v-else
-        class="p-grid p-jc-center p-ai-center vertical-container p-p-4"
-      >
+      <div v-else>
         <ProgressSpinner
           style="width:30px;height:30px"
           strokeWidth="3"
@@ -38,36 +26,53 @@
         />
       </div>
     </div>
-    <div v-else class="p-grid p-jc-center p-ai-center vertical-container p-p-4">
+    <!-- <div v-if="user" class="p-text-center">
+      <div v-if="!loading">
+        
+      </div>
+      
+      <h2 v-if="user.user">{{ user.user.name }}</h2>
+      <div class="p-buttonset p-mt-3">
+        <Button
+          v-if="!alreadyFriends"
+          label="Add"
+          icon="pi pi-check"
+          @click="addFriend()"
+        />
+        <Button
+          v-else
+          label="Remove"
+          icon="pi pi-times"
+          class="p-button-danger"
+          @click="removeFriend()"
+        />
+      </div>
+
+      <Message v-if="error || $store.getters.error" severity="error">{{
+        error || $store.getters.error
+      }}</Message>
+
+      <Friends :friends="user.user.friends" />
+    </div>
+    <div v-else>
       <ProgressSpinner
         style="width:30px;height:30px"
         strokeWidth="3"
         fill="none"
         animationDuration=".5s"
       />
-    </div>
-
-    <span class="p-buttonset p-mt-3">
-      <Button
-        label="Add"
-        icon="pi pi-check"
-        @click="addFriend(user_info.user)"
-      />
-      <Button
-        label="Remove"
-        icon="pi pi-times"
-        class="p-button-danger"
-        @click="removeFriend(user_info.user)"
-      />
-    </span>
+    </div> -->
   </section>
 </template>
 
 <script>
+import Friends from './Friends';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'Profile',
+  //eslint-disable-next-line
+  components: { Friends },
   data() {
     return {
       loading: false,
@@ -97,15 +102,24 @@ export default {
         this.loading = false;
       }
     },
-    addFriend(user) {
-      console.log(user);
+    async addFriend() {
+      await this.$store.dispatch('posts');
+      await this.$store.dispatch('add_friend', {
+        userId: this.login.user._id,
+        friendId: this.user.user._id,
+      });
     },
     removeFriend(user) {
       console.log(user);
     },
   },
   computed: {
-    ...mapGetters(['user_info', 'user']),
+    ...mapGetters(['user', 'login']),
+    alreadyFriends() {
+      return this.user.user.friends.some(
+        (friend) => friend.friendId._id === this.login.user._id
+      );
+    },
   },
   unmounted() {
     this.$store.dispatch('reset_user');

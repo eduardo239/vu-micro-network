@@ -1,5 +1,6 @@
 <template>
   <div class="App">
+    {{ $store.getters.error }}
     <Menu />
     <router-view v-slot="{ Component }">
       <transition name="slide-fade" mode="out-in">
@@ -33,11 +34,6 @@ export default {
 </script>
 
 <style>
-.App {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
 .slide-fade-enter-active {
   transition: all 0.1s ease;
 }

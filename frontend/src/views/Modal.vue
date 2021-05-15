@@ -11,8 +11,10 @@
           <img alt="user avatar" :src="post.image" />
         </template>
         <template #title>
-          <div class="p-grid p-ai-center vertical-container">
-            <router-link :to="`/profile/${post.userId._id}`">
+          <div class="flex-v-center">
+            <router-link
+              :to="{ name: 'profile', params: { id: post.userId._id } }"
+            >
               <Chip
                 :label="post.userId.name"
                 :image="
@@ -22,7 +24,9 @@
               />
             </router-link>
 
-            <span class="date">{{ post.createdAt }}</span>
+            <span class="date"
+              >{{ fromNow(new Date(post.createdAt)) }} ago</span
+            >
           </div>
         </template>
         <template #content>
@@ -36,7 +40,7 @@
                 v-model="old_content"
                 autoFocus
                 :autoResize="true"
-                rows="5"
+                rows="3"
               />
               <Button icon="pi pi-save" @click.prevent="edit(post._id)" />
             </template>
@@ -57,7 +61,7 @@
       </Card>
       <Comments :post="post" />
     </div>
-    <div v-else class="p-grid p-jc-center p-ai-center vertical-container p-p-4">
+    <div v-else>
       <ProgressSpinner
         style="width:30px;height:30px"
         strokeWidth="3"
@@ -71,6 +75,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import Comments from './Comments';
+import { fromNow } from '../helper/dates';
 
 export default {
   name: 'Modal',
@@ -83,6 +88,7 @@ export default {
     };
   },
   methods: {
+    fromNow: fromNow,
     toggleModal() {
       this.$store.commit('toggle_modal');
     },

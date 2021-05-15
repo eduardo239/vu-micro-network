@@ -1,56 +1,12 @@
 <template>
   <section>
-    <div
-      v-for="comment in post.comments"
-      :key="comment._id"
-      class="App-comment"
-    >
-      <!-- {{ comment }} -->
-      <Card>
-        <template #title>
-          <router-link :to="`/profile/${comment.userId._id}`">
-            <Chip
-              :label="comment.userId.name"
-              :image="
-                comment.userId.imageAvatar || require('../assets/avatar1.svg')
-              "
-              class="p-mr-2 p-mb-2 custom-chip"
-            />
-          </router-link>
-        </template>
-        <template #content>
-          {{ comment.content }}
-        </template>
-        <template #footer>
-          <Button
-            class="p-button-sm
-            p-button-rounded p-button-text"
-            :label="comment.likes.toString()"
-            icon="pi pi-heart"
-            @click="commentLike(post._id, comment._id)"
-          />
-          <Button
-            class="p-button-sm
-            p-button-rounded p-button-text"
-            icon="pi pi-pencil"
-            @click="commentEdit(comment._id)"
-          />
-          <Button
-            class="p-button-sm
-            p-button-rounded p-button-text"
-            icon="pi pi-trash"
-            @click="commentDelete(post._id, comment._id)"
-          />
-        </template>
-      </Card>
-    </div>
-    <form @submit.prevent="new_comment(post._id)">
+    <form class="p-mx-2 p-my-3">
       <Textarea
         style="width: 100%"
         v-model="content"
         :autoResize="true"
-        rows="5"
-        cols="30"
+        rows="3"
+        placeholder="Comment here.."
       />
       <Button
         v-if="!loading"
@@ -67,6 +23,49 @@
         type="submit"
       />
     </form>
+    <!-- alert -->
+    <Message style="margin: 0" v-if="error" severity="warn">{{
+      error
+    }}</Message>
+    <!-- comments -->
+    <div
+      v-for="comment in post.comments.slice().reverse()"
+      :key="comment._id"
+      class="App-comments flex-h-space"
+    >
+      <!-- {{ comment }} -->
+      <div class="flex-v-start">
+        <router-link :to="`/profile/${comment.userId._id}`">
+          <Chip
+            :label="comment.userId.name"
+            :image="
+              comment.userId.imageAvatar || require('../assets/avatar1.svg')
+            "
+            class="p-mr-2 p-mb-2 custom-chip"
+          />
+        </router-link>
+        <p class="App-comment">
+          {{ comment.content }}
+        </p>
+      </div>
+
+      <div class="Buttons">
+        <Button
+          class="p-button-sm
+            p-button-rounded p-button-text"
+          :label="comment.likes.toString()"
+          icon="pi pi-heart"
+          @click="commentLike(post._id, comment._id)"
+        />
+
+        <Button
+          class="p-button-sm
+            p-button-rounded p-button-text"
+          icon="pi pi-trash"
+          @click="commentDelete(post._id, comment._id)"
+        />
+      </div>
+    </div>
   </section>
 </template>
 
@@ -78,10 +77,12 @@ export default {
     return {
       content: '',
       loading: false,
+      error: '',
     };
   },
   methods: {
     async new_comment(postId) {
+      if (!this.content) return (this.error = 'Please enter a valid value.');
       this.loading = true;
       try {
         const data = { postId: postId, content: this.content };
@@ -98,9 +99,7 @@ export default {
       await this.$store.dispatch('like_comment', commentId);
       await this.$store.dispatch('post', postId);
     },
-    commentEdit() {
-      console.log('edit');
-    },
+
     async commentDelete(postId, commentId) {
       await this.$store.dispatch('delete_comment', commentId);
       await this.$store.dispatch('post', postId);
@@ -109,4 +108,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.Buttons {
+  display: flex;
+  align-items: center;
+}
+</style>

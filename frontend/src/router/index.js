@@ -1,28 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import store from '../store';
-import Home from '../views/Home.vue';
+import Home from '../views/Home';
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home,
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: () =>
       import(/* webpackChunkName: "login" */ '../views/Login.vue'),
   },
   {
     path: '/register',
-    name: 'Register',
+    name: 'register',
     component: () =>
       import(/* webpackChunkName: "register" */ '../views/Register.vue'),
   },
   {
     path: '/profile/:id',
-    name: 'Profile',
+    name: 'profile',
     meta: {
       requireAuth: true,
     },
@@ -30,15 +30,22 @@ const routes = [
       import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
   },
   {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
+    path: '/:catchAll(.*)*',
+    name: 'notFound',
     component: () =>
       import(/* webpackChunkName: "notFound" */ '../views/NotFound.vue'),
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
+  mode: 'history',
   routes,
 });
 

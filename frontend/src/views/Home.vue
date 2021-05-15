@@ -1,5 +1,5 @@
 <template>
-  <div class="p-col-12 p-md-12">
+  <div>
     <New />
     <div v-if="posts.length > 0">
       <section v-for="post in posts" :key="post._id">

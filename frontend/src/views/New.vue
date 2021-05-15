@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.$store.getters.isLoggedIn">
+  <div v-if="this.$store.getters.isLoggedIn" class="p-mb-1">
     <form
       v-if="!loading"
       class="p-inputgroup p-mb-2"
@@ -20,7 +20,7 @@
         @click.prevent="onSubmit"
       />
     </form>
-    <div v-else class="p-grid p-jc-center p-ai-center vertical-container p-p-4">
+    <div v-else>
       <ProgressSpinner
         style="width:50px;height:50px"
         strokeWidth="3"
@@ -68,7 +68,7 @@ export default {
         const formData = new FormData();
         formData.append('image', this.image);
         formData.append('userId', this.user_id.user._id);
-        formData.append('content', this.content);
+        formData.append('content', this.content.trim());
 
         await this.$store.dispatch('new_post', formData);
         await this.$store.dispatch('posts');

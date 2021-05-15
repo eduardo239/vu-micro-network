@@ -1,6 +1,6 @@
 <template>
-  <div class="p-grid p-jc-center">
-    <div class="p-col-11 p-sm-7 p-md-6 p-lg-6">
+  <div>
+    <div>
       <form class="p-shadow-1 p-my-4 p-p-5 App-form" @submit.prevent="register">
         <h3>Register</h3>
         <div class="p-fluid">

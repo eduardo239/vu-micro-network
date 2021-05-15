@@ -2,10 +2,13 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+
 import './css/reset.css';
 import './css/normalize.css';
 import './css/app.css';
+
 import PrimeVue from 'primevue/config';
+
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Message from 'primevue/message';
@@ -23,12 +26,17 @@ import ToastService from 'primevue/toastservice';
 import Card from 'primevue/card';
 import Inplace from 'primevue/inplace';
 import Textarea from 'primevue/textarea';
-import ConfirmationService from 'primevue/confirmationservice';
 import ConfirmDialog from 'primevue/confirmdialog';
+import ConfirmPopup from 'primevue/confirmpopup';
 import ProgressSpinner from 'primevue/progressspinner';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ConfirmationService from 'primevue/confirmationservice';
 
 //import 'primevue/resources/themes/saga-blue/theme.css'; //theme
-import 'primevue/resources/themes/arya-orange/theme.css';
+// import 'primevue/resources/themes/arya-orange/theme.css';
+// import 'primevue/resources/themes/arya-green/theme.css';
+import 'primevue/resources/themes/bootstrap4-light-blue/theme.css';
 import 'primevue/resources/primevue.min.css'; //core css
 import 'primeicons/primeicons.css'; //icons
 import 'primeflex/primeflex.css';
@@ -38,6 +46,8 @@ createApp(App)
   .use(PrimeVue, { ripple: true })
   .use(ToastService)
   .use(ConfirmationService)
+  .component('Column', Column)
+  .component('DataTable', DataTable)
   .component('InputText', InputText)
   .component('Button', Button)
   .component('Message', Message)
@@ -56,5 +66,6 @@ createApp(App)
   .component('Textarea', Textarea)
   .component('ConfirmDialog', ConfirmDialog)
   .component('ProgressSpinner', ProgressSpinner)
+  .component('ConfirmPopup', ConfirmPopup)
   .use(router)
   .mount('#app');
