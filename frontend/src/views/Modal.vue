@@ -108,7 +108,8 @@ export default {
             content: this.new_content,
           });
           await this.$store.dispatch('post', id);
-          await this.$store.dispatch('posts');
+          let q = this.$route.query;
+          await this.$store.dispatch('postsPerPage', q);
         },
         reject: () => {
           //callback to execute when user rejects the action

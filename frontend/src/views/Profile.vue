@@ -26,32 +26,37 @@
         />
       </div>
     </div>
+    <h2 v-if="user.user">{{ user.user.name }}</h2>
+    <div class="p-buttonset p-mt-3">
+      <Button label="Add" icon="pi pi-check" @click="addFriend()" />
+      <Button
+        label="Remove"
+        icon="pi pi-times"
+        class="p-button-danger"
+        @click="removeFriend()"
+      />
+    </div>
+    <Message v-if="error || $store.getters.error" severity="error">{{
+      error || $store.getters.error
+    }}</Message>
+    {{ list }}
+
+    <DataTable :value="list" stripedRows responsiveLayout="scroll">
+      <Column field="friendsId" header="ID"></Column>
+      <Column field="name" header="Name"></Column>
+      <Column field="imageAvatar" header="Avatar"> </Column>
+    </DataTable>
+
+    <Button
+      label="Load Friends"
+      icon="pi pi-heart"
+      class="p-button-danger"
+      @click="rawFriends"
+    />
+
     <!-- <div v-if="user" class="p-text-center">
       <div v-if="!loading">
-        
       </div>
-      
-      <h2 v-if="user.user">{{ user.user.name }}</h2>
-      <div class="p-buttonset p-mt-3">
-        <Button
-          v-if="!alreadyFriends"
-          label="Add"
-          icon="pi pi-check"
-          @click="addFriend()"
-        />
-        <Button
-          v-else
-          label="Remove"
-          icon="pi pi-times"
-          class="p-button-danger"
-          @click="removeFriend()"
-        />
-      </div>
-
-      <Message v-if="error || $store.getters.error" severity="error">{{
-        error || $store.getters.error
-      }}</Message>
-
       <Friends :friends="user.user.friends" />
     </div>
     <div v-else>
@@ -78,14 +83,30 @@ export default {
       loading: false,
       file: '',
       error: '',
+      list: [],
     };
   },
   async created() {
     await this.$store.dispatch('get_user', this.$route.params.id);
   },
 
-  async mounted() {},
+  async mounted() {
+    if (this.$store.getters.user.user) this.rawFriends();
+  },
   methods: {
+    rawFriends() {
+      let obj = {};
+      let arr = [];
+
+      this.$store.getters.user.user.friends.map((f) => {
+        obj = {};
+        obj.friendsId = f._id;
+        obj.name = f.friendId.name;
+        obj.imageAvatar = f.friendId.imageAvatar;
+        arr.push(obj);
+      });
+      this.list = arr;
+    },
     async onChange() {
       this.loading = true;
 
@@ -103,22 +124,31 @@ export default {
       }
     },
     async addFriend() {
-      await this.$store.dispatch('posts');
+      // await this.$store.dispatch('posts');
       await this.$store.dispatch('add_friend', {
         userId: this.login.user._id,
         friendId: this.user.user._id,
       });
+      await this.$store.dispatch('get_user', this.$route.params.id);
     },
-    removeFriend(user) {
-      console.log(user);
+    async removeFriend() {
+      await this.$store.dispatch('remove_friend', {
+        userId: this.login.user._id,
+        friendId: this.user.user._id,
+      });
+      await this.$store.dispatch('get_user', this.$route.params.id);
     },
   },
   computed: {
     ...mapGetters(['user', 'login']),
     alreadyFriends() {
-      return this.user.user.friends.some(
-        (friend) => friend.friendId._id === this.login.user._id
-      );
+      if (this.user?.user?.friends > 0) {
+        return this.user.user.friends.some(
+          (friend) => friend.friendId._id === this.login.user._id
+        );
+      } else {
+        return [];
+      }
     },
   },
   unmounted() {

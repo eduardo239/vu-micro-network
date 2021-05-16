@@ -16,6 +16,7 @@ import {
 import { admin, protect } from '../middleware/authMiddleware.js';
 
 router.route('/').post(postUser).get(protect, getUsers);
+router.route('/friends').delete(protect, delete_friend);
 router.route('/login').post(authUser);
 router.route('/profile').get(protect, getProfile).put(protect, putUser);
 router.route('/posts/:userId').get(protect, getUsersPosts);

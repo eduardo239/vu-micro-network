@@ -1,6 +1,6 @@
 <template>
   <section>
-    <form class="p-mx-2 p-my-3">
+    <form v-if="this.$store.getters.isLoggedIn" class="p-mx-2 p-my-3">
       <Textarea
         style="width: 100%"
         v-model="content"
@@ -49,7 +49,7 @@
         </p>
       </div>
 
-      <div class="Buttons">
+      <div class="Buttons flex-v-start">
         <Button
           class="p-button-sm
             p-button-rounded p-button-text"
@@ -108,9 +108,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.Buttons {
-  display: flex;
-  align-items: center;
-}
-</style>
+<style scoped></style>

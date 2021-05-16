@@ -1,5 +1,8 @@
 <template>
   <div class="App">
+    <h4 v-if="$store.getters.login.user">
+      {{ $store.getters.login.user.name }}
+    </h4>
     {{ $store.getters.error }}
     <Menu />
     <router-view v-slot="{ Component }">
@@ -18,7 +21,7 @@ export default {
   components: { Menu },
   mounted() {},
   created() {
-    this.$store.dispatch('posts');
+    // this.$store.dispatch('posts');
     this.$store.dispatch('auto_login');
     axios.interceptors.response.use(undefined, function(err) {
       // eslint-disable-next-line

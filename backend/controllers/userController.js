@@ -264,33 +264,35 @@ const add_friend = asyncHandler(async (req, res) => {
 
 /**
  * @description   Remove friend
- * @route         DELETE /api/friends
+ * @route         DELETE /api/users/friends
  * @access        Private
  * TODO perguntar ao outro user aceita e adicionar nos dois
  */
 const delete_friend = asyncHandler(async (req, res) => {
   const { userId, friendId } = req.body;
 
-  const friend1 = await Friend.find({ userId, friendId });
+  const user1 = await Friend.find({ userId, friendId });
   const friend2 = await Friend.find({ userId: friendId, friendId: userId });
 
-  if (!friend1 && !friend2) {
+  if (!user1 && !friend2) {
     res.status(400).json({ message: 'This user is not your friend.' });
   } else {
     const user = await User.findById(userId);
     const friend = await User.findById(friendId);
 
-    user.friends.pull(friend1[0]._id);
-    friend.friends.pull(friend2[0]._id);
+    if (user1.length === 0 || friend2.length === 0) {
+      res.status(404).json({ message: 'Friends not found.' });
+    } else {
+      user.friends.pull(user1[0]._id);
+      friend.friends.pull(friend2[0]._id);
 
-    user.save();
-    friend.save();
+      user.save();
+      friend.save();
 
-    console.log(friend1);
-
-    await Friend.deleteOne({ _id: friend1[0]._id });
-    await Friend.deleteOne({ _id: friend2[0]._id });
-    res.status(200).send(true);
+      await Friend.deleteOne({ _id: user1[0]._id });
+      await Friend.deleteOne({ _id: friend2[0]._id });
+      res.status(200).send(true);
+    }
   }
 });
 

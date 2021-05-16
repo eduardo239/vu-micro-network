@@ -51,7 +51,8 @@ export default {
     },
     async like(id) {
       await this.$store.dispatch('post_like', id);
-      await this.$store.dispatch('posts');
+      let q = this.$route.query;
+      await this.$store.dispatch('postsPerPage', q);
     },
 
     async remove(id) {
@@ -68,7 +69,8 @@ export default {
           });
           // TODO check if user is logged in && user is the owner
           await this.$store.dispatch('del_post', id);
-          await this.$store.dispatch('posts');
+          let q = this.$route.query;
+          await this.$store.dispatch('postsPerPage', q);
         },
         reject: () => {
           this.$toast.add({

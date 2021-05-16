@@ -9,14 +9,15 @@ import Jimp from 'jimp';
  * @access        Public
  */
 const getPosts = asyncHandler(async (req, res) => {
-  const limit = parseInt(req.query.limit) || 10;
-  const skip = parseInt(req.query.skip) || 0;
+  const limit = parseInt(req.query.limit) || 2;
+  const page = parseInt(req.query.page) || 0;
+  console.log(req.query);
 
   const posts = await Post.find({}, null, { sort: { createdAt: -1 } })
     .populate('comments', 'content userId postId createdAt')
     .populate('userId', 'imageAvatar name')
     .limit(limit)
-    .skip(skip);
+    .skip(page * limit);
 
   if (posts) {
     res.status(200).json(posts);

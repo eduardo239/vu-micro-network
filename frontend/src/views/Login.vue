@@ -1,5 +1,8 @@
 <template>
   <div>
+    <Message v-if="error || $store.getters.error" severity="error">{{
+      error || $store.getters.error
+    }}</Message>
     <form class="p-shadow-1 p-my-4 p-p-5 App-form" @submit.prevent="login">
       <h3>Login</h3>
       <div class="p-fluid">
@@ -27,10 +30,6 @@
       </div>
       <router-link to="/register" class="link">Sing Up</router-link>
     </form>
-
-    <Message v-if="error || $store.getters.error" severity="error">{{
-      error || $store.getters.error
-    }}</Message>
   </div>
 </template>
 

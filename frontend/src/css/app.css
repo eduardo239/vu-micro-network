@@ -110,6 +110,10 @@ th {
   display: flex;
   align-items: center;
 }
+.flex-h-center {
+  display: flex;
+  justify-content: center;
+}
 .flex-v-start {
   display: flex;
   align-items: flex-start;
@@ -165,6 +169,7 @@ th {
   word-break: break-all;
   white-space: pre-line;
   margin: 0;
+  padding-top: 0.4rem;
 }
 
 .modal-content {

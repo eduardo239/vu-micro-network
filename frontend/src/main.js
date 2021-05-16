@@ -32,6 +32,8 @@ import ProgressSpinner from 'primevue/progressspinner';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ConfirmationService from 'primevue/confirmationservice';
+import Password from 'primevue/password';
+import InputNumber from 'primevue/inputnumber';
 
 //import 'primevue/resources/themes/saga-blue/theme.css'; //theme
 // import 'primevue/resources/themes/arya-orange/theme.css';
@@ -67,5 +69,7 @@ createApp(App)
   .component('ConfirmDialog', ConfirmDialog)
   .component('ProgressSpinner', ProgressSpinner)
   .component('ConfirmPopup', ConfirmPopup)
+  .component('Password', Password)
+  .component('InputNumber', InputNumber)
   .use(router)
   .mount('#app');

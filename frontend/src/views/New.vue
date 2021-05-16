@@ -71,7 +71,8 @@ export default {
         formData.append('content', this.content.trim());
 
         await this.$store.dispatch('new_post', formData);
-        await this.$store.dispatch('posts');
+        let q = this.$route.query;
+        await this.$store.dispatch('postsPerPage', q);
 
         this.image = '';
         this.content = '';

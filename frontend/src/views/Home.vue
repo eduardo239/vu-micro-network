@@ -1,8 +1,8 @@
 <template>
   <div>
     <New />
-    <div v-if="posts.length > 0">
-      <section v-for="post in posts" :key="post._id">
+    <div v-if="postsPerPage.length > 0">
+      <section v-for="post in postsPerPage" :key="post._id">
         <Post :data="post" />
       </section>
     </div>
@@ -10,6 +10,7 @@
       <Message severity="info">Posts not found</Message>
     </div>
     <Modal v-if="$store.getters.modal" />
+    <Paginator />
   </div>
 </template>
 
@@ -17,12 +18,13 @@
 import New from './New';
 import Post from './Post';
 import Modal from './Modal';
+import Paginator from './Paginator';
 import { mapGetters } from 'vuex';
 
 export default {
-  components: { New, Post, Modal },
+  components: { New, Post, Modal, Paginator },
   computed: {
-    ...mapGetters(['posts']),
+    ...mapGetters(['postsPerPage']),
   },
   unmounted() {
     if (this.$store.getters.modal) {

@@ -10,6 +10,7 @@ export default createStore({
     user: {},
     post: {},
     posts: [],
+    postsPerPage: [],
     error: '',
   },
   mutations: {
@@ -105,6 +106,29 @@ export default createStore({
     reset_error(state) {
       state.error = '';
     },
+    add_friend_request(state) {
+      state.status = 'loading';
+      state.error = '';
+    },
+    remove_friend_request(state) {
+      state.status = 'loading';
+      state.error = '';
+    },
+    remove_friend_error(state, payload) {
+      state.error = payload;
+    },
+    POSTS_PER_PAGE(state, payload) {
+      console.log('posts per page');
+      state.postsPerPage = payload;
+    },
+    posts_per_page_request(state) {
+      state.status = 'loading';
+    },
+    posts_per_page_success(state, payload) {
+      state.status = '';
+      state.postsPerPage = payload;
+      state.error = '';
+    },
   },
   getters: {
     isLoading: (state) => state.loading,
@@ -116,6 +140,7 @@ export default createStore({
     posts: (state) => state.posts,
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
+    postsPerPage: (state) => state.postsPerPage,
   },
   actions: {
     reset_error({ commit }) {
@@ -242,6 +267,26 @@ export default createStore({
           .then((resp) => {
             const posts = resp.data;
             commit('posts_success', posts);
+            resolve(resp);
+          })
+          .then((error) => {
+            reject(error);
+          });
+      });
+    },
+    postsPerPage({ commit }, { page, limit }) {
+      console.log(page);
+      // eslint-disable-next-line
+      return new Promise((resolve, reject) => {
+        commit('posts_per_page_request');
+        axios({
+          params: { page, limit },
+          url: 'http://localhost:5000/api/posts/',
+          method: 'GET',
+        })
+          .then((resp) => {
+            const posts = resp.data;
+            commit('posts_per_page_success', posts);
             resolve(resp);
           })
           .then((error) => {
@@ -434,6 +479,7 @@ export default createStore({
     // eslint-disable-next-line
     add_friend({ commit }, { userId, friendId }) {
       return new Promise((resolve, reject) => {
+        commit('add_friend_request');
         axios({
           url: 'http://localhost:5000/api/friends/',
           method: 'POST',
@@ -448,6 +494,28 @@ export default createStore({
           })
           .catch((error) => {
             console.log(error);
+            commit('add_friend_error', error.response.data.message);
+            reject(error);
+          });
+      });
+    },
+    remove_friend({ commit }, { userId, friendId }) {
+      return new Promise((resolve, reject) => {
+        commit('remove_friend_request');
+        axios({
+          url: 'http://localhost:5000/api/friends/',
+          method: 'DELETE',
+          data: { userId, friendId },
+          headers: {
+            Authorization: `Bearer ${this.state.token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((resp) => {
+            resolve(resp);
+          })
+          .catch((error) => {
+            commit('remove_friend_error', error.response.data.message);
             commit('add_friend_error', error.response.data.message);
             reject(error);
           });
