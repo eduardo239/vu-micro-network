@@ -1,10 +1,5 @@
 <template>
   <section class="modal" @click="outsideClick">
-    <Button
-      icon="pi pi-fw pi-times"
-      class="p-button-danger btn-close"
-      @click="toggleModal"
-    />
     <div class="modal-content" v-if="post" ref="modalContent">
       <Card>
         <template #header>
@@ -30,21 +25,32 @@
           </div>
         </template>
         <template #content>
-          <Inplace :closable="true" ref="inplaceRef">
-            <template #display>
-              {{ old_content || 'Click to Edit' }}
-            </template>
-            <template #content>
-              <Textarea
-                class="textarea"
-                v-model="old_content"
-                autoFocus
-                :autoResize="true"
-                rows="3"
+          <p>{{ old_content }}</p>
+          <Dialog header="Edit Content" :visible="display" closable>
+            <div class="p-field">
+              <InputText
+                v-model="new_content"
+                id="content"
+                type="text"
+                :placeholder="old_content"
               />
-              <Button icon="pi pi-save" @click.prevent="edit(post._id)" />
+            </div>
+
+            <template #footer>
+              <Button
+                label="Cancel"
+                icon="pi pi-times"
+                class="p-button-text"
+                @click="closeEdit"
+              />
+              <Button
+                label="Save"
+                icon="pi pi-save"
+                autofocus
+                @click.prevent="edit(post._id)"
+              />
             </template>
-          </Inplace>
+          </Dialog>
         </template>
 
         <template #footer>
@@ -54,8 +60,12 @@
               icon="pi pi-heart"
               @click.prevent="like(post._id)"
             />
-            <ConfirmDialog></ConfirmDialog>
-            <Button icon="pi pi-trash" @click.prevent="remove(post._id)" />
+            <Button icon="pi pi-pencil" @click.prevent="edit(post._id)" />
+            <ConfirmPopup></ConfirmPopup>
+            <Button
+              icon="pi pi-trash"
+              @click.prevent="remove($event, post._id)"
+            />
           </span>
         </template>
       </Card>
@@ -85,10 +95,11 @@ export default {
       new_content: '',
       old_content: '',
       modalContent: '',
+      display: false,
     };
   },
   methods: {
-    fromNow: fromNow,
+    fromNow,
     toggleModal() {
       this.$store.commit('toggle_modal');
     },
@@ -97,34 +108,31 @@ export default {
       await this.$store.dispatch('post', id);
     },
     async edit(id) {
-      this.new_content = this.old_content;
-      this.$confirm.require({
-        message: 'Are you sure you want to proceed?',
-        header: 'Confirmation',
-        icon: 'pi pi-exclamation-triangle',
-        accept: async () => {
-          await this.$store.dispatch('update_post', {
-            id,
-            content: this.new_content,
-          });
-          await this.$store.dispatch('post', id);
-          let q = this.$route.query;
-          await this.$store.dispatch('postsPerPage', q);
-        },
-        reject: () => {
-          //callback to execute when user rejects the action
-        },
+      this.$store.commit('RESET_ERROR');
+
+      this.display = true;
+      await this.$store.dispatch('update_post', {
+        id,
+        content: this.new_content,
       });
+      await this.$store.dispatch('posts');
+      await this.$store.dispatch('post', id);
+      let q = this.$route.query;
+      await this.$store.dispatch('postsPerPage', q);
     },
-    async remove(id) {
+    closeEdit() {
+      this.display = false;
+    },
+    async remove(event, id) {
       this.$confirm.require({
+        target: event.currentTarget,
         message: 'Are you sure you want to proceed?',
-        header: 'Confirmation',
         icon: 'pi pi-exclamation-triangle',
         accept: async () => {
           this.$store.commit('toggle_modal');
           await this.$store.dispatch('del_post', id);
-          await this.$store.dispatch('posts');
+          let q = this.$route.query;
+          await this.$store.dispatch('postsPerPage', q);
         },
         reject: () => {
           //callback to execute when user rejects the action
@@ -143,6 +151,7 @@ export default {
   },
   mounted() {
     this.old_content = this.post.content;
+    this.new_content = this.old_content;
     this.modalContent = this.$refs.modalContent;
     this.inplaceRef = this.$refs.inplaceRef;
   },

@@ -28,17 +28,17 @@ import Inplace from 'primevue/inplace';
 import Textarea from 'primevue/textarea';
 import ConfirmDialog from 'primevue/confirmdialog';
 import ConfirmPopup from 'primevue/confirmpopup';
+import ConfirmationService from 'primevue/confirmationservice';
 import ProgressSpinner from 'primevue/progressspinner';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import ConfirmationService from 'primevue/confirmationservice';
 import Password from 'primevue/password';
 import InputNumber from 'primevue/inputnumber';
-
-//import 'primevue/resources/themes/saga-blue/theme.css'; //theme
-// import 'primevue/resources/themes/arya-orange/theme.css';
+import Dialog from 'primevue/dialog';
+// import 'primevue/resources/themes/saga-blue/theme.css'; //theme
+import 'primevue/resources/themes/arya-orange/theme.css';
 // import 'primevue/resources/themes/arya-green/theme.css';
-import 'primevue/resources/themes/bootstrap4-light-blue/theme.css';
+// import 'primevue/resources/themes/bootstrap4-light-blue/theme.css';
 import 'primevue/resources/primevue.min.css'; //core css
 import 'primeicons/primeicons.css'; //icons
 import 'primeflex/primeflex.css';
@@ -71,5 +71,6 @@ createApp(App)
   .component('ConfirmPopup', ConfirmPopup)
   .component('Password', Password)
   .component('InputNumber', InputNumber)
+  .component('Dialog', Dialog)
   .use(router)
   .mount('#app');

@@ -1,7 +1,7 @@
 <template>
   <section>
     <div v-if="user.user">
-      <label for="avatar" v-if="!loading">
+      <label for="avatar" v-if="!loading" style="text-align: center;">
         <Avatar
           class="avatar"
           :image="user.user.imageAvatar || require('../assets/avatar1.svg')"
@@ -25,9 +25,9 @@
           animationDuration=".5s"
         />
       </div>
+      <h3 v-if="user">{{ user.user.name }}</h3>
     </div>
-    <h2 v-if="user.user">{{ user.user.name }}</h2>
-    <div class="p-buttonset p-mt-3">
+    <div class="p-buttonset p-mt-3" v-if="user?.user?._id !== login?.user?._id">
       <Button label="Add" icon="pi pi-check" @click="addFriend()" />
       <Button
         label="Remove"
@@ -39,12 +39,11 @@
     <Message v-if="error || $store.getters.error" severity="error">{{
       error || $store.getters.error
     }}</Message>
-    {{ list }}
 
-    <DataTable :value="list" stripedRows responsiveLayout="scroll">
+    <DataTable :value="list" responsiveLayout="scroll">
       <Column field="friendsId" header="ID"></Column>
       <Column field="name" header="Name"></Column>
-      <Column field="imageAvatar" header="Avatar"> </Column>
+      <Column field="imageAvatar" header="Avatar"></Column>
     </DataTable>
 
     <Button
@@ -53,20 +52,6 @@
       class="p-button-danger"
       @click="rawFriends"
     />
-
-    <!-- <div v-if="user" class="p-text-center">
-      <div v-if="!loading">
-      </div>
-      <Friends :friends="user.user.friends" />
-    </div>
-    <div v-else>
-      <ProgressSpinner
-        style="width:30px;height:30px"
-        strokeWidth="3"
-        fill="none"
-        animationDuration=".5s"
-      />
-    </div> -->
   </section>
 </template>
 
@@ -89,7 +74,6 @@ export default {
   async created() {
     await this.$store.dispatch('get_user', this.$route.params.id);
   },
-
   async mounted() {
     if (this.$store.getters.user.user) this.rawFriends();
   },
@@ -153,6 +137,7 @@ export default {
   },
   unmounted() {
     this.$store.dispatch('reset_user');
+    this.list = [];
   },
 };
 </script>

@@ -39,19 +39,20 @@ export default {
           command: () => this.logout(),
           visible: () => this.$store.getters.isLoggedIn,
         },
+
         {
-          label: 'About',
-          icon: 'pi pi-fw pi-times',
-          to: 'about',
+          label: 'Admin',
+          icon: 'pi pi-fw pi-key',
+          visible: () => this.isAdmin,
         },
-        // {
-        //   label: 'Theme',
-        //   icon: 'pi pi-fw pi-sun',
-        // },
       ],
+      isAdmin: false,
     };
   },
   created() {},
+  mounted() {
+    //this.isAdmin = this.$store.getters.login.user.isAdmin;
+  },
   methods: {
     logout() {
       this.$store

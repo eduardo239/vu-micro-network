@@ -18,7 +18,7 @@ export default createStore({
       state.modal = !state.modal;
     },
     auth_request(state) {
-      state.status = 'loading';
+      state.status = true;
     },
     auth_success(state, { token, user }) {
       state.status = 'success';
@@ -103,7 +103,7 @@ export default createStore({
     add_friend_error(state, payload) {
       state.error = payload;
     },
-    reset_error(state) {
+    RESET_ERROR(state) {
       state.error = '';
     },
     add_friend_request(state) {
@@ -118,7 +118,6 @@ export default createStore({
       state.error = payload;
     },
     POSTS_PER_PAGE(state, payload) {
-      console.log('posts per page');
       state.postsPerPage = payload;
     },
     posts_per_page_request(state) {
@@ -143,9 +142,6 @@ export default createStore({
     postsPerPage: (state) => state.postsPerPage,
   },
   actions: {
-    reset_error({ commit }) {
-      commit('reset_error');
-    },
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request');
@@ -275,7 +271,6 @@ export default createStore({
       });
     },
     postsPerPage({ commit }, { page, limit }) {
-      console.log(page);
       // eslint-disable-next-line
       return new Promise((resolve, reject) => {
         commit('posts_per_page_request');
@@ -340,6 +335,8 @@ export default createStore({
     },
     // eslint-disable-next-line
     update_post({ commit }, { id, content }) {
+      console.log(id);
+      console.log(content);
       return new Promise((reject, resolve) => {
         axios({
           url: `http://localhost:5000/api/posts/${id}`,

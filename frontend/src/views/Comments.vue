@@ -9,18 +9,11 @@
         placeholder="Comment here.."
       />
       <Button
-        v-if="!loading"
+        :disabled="loading"
         style="width: 100%; paddingRight: 2rem"
         label="Send"
         type="submit"
         @click.prevent="new_comment(post._id)"
-      />
-      <Button
-        v-else
-        icon="pi pi-spin pi-spinner"
-        style="width: 100%; paddingRight: 2rem"
-        label="Sending"
-        type="submit"
       />
     </form>
     <!-- alert -->

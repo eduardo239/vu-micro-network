@@ -21,12 +21,14 @@
       />
     </form>
     <div v-else>
-      <ProgressSpinner
-        style="width:50px;height:50px"
-        strokeWidth="3"
-        fill="none"
-        animationDuration=".5s"
-      />
+      <div class="flex-v-center" style="width: 100%;">
+        <ProgressSpinner
+          style="width:50px;height:50px"
+          strokeWidth="3"
+          fill="none"
+          animationDuration=".5s"
+        />
+      </div>
     </div>
     <div v-if="error">
       <Message severity="info">{{ error }}</Message>
